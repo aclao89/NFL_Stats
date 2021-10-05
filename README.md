@@ -14,7 +14,8 @@ The purpose of this project was to pull quarterback stats from the 2020-2021 NFL
 
 A [radar chart](https://www.data-to-viz.com/caveat/spider.html) is a two-dimensional chart type designed to plot one or more series of values over multiple quantitative variables. Each variable has its own axis, all axes are joined in the center of the figure.
 
-Questions asked:
+
+## Questions asked:
 
 1. What stats should we take into consideration to determine quarterback efficiency?
 2. Four NFL teams drafted quarterbacks from the 2020 NFL Draft Class: did teams take the correct steps in replacing their current respective quarterback? i.e. quarterbacks don't get replaced often since they are the main focus of a team's offense; switching quarterbacks too often can lead to inconsistent play schemes and ruin team chemistry.
@@ -24,3 +25,17 @@ Questions asked:
 ________________________________________________________________________________________
 
 # Import required Python Libraries
+
+We will use two modules to open the webpage and scrape the data: urllib.request and BeautifulSoup, respectively.
+
+In addition, we will also use pandas and numpy libraries for data manipulation as well as matplotlib for the radar charts.
+
+![import sc](https://github.com/aclao89/NFL_Stats/blob/main/Images/import_lib.PNG)
+
+# Scrape the data
+
+The dataset imported is the [NFL passing data](https://www.pro-football-reference.com/years/2020/passing.htm) from the 2020 - 2021 season.
+
+![scrape data]()
+
+The two functions via BeautifulSoup used to scrape the data were [findAll()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#find-all) and [getText()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#get-text), which return values based on the HTML of the page.

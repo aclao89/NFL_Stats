@@ -36,6 +36,20 @@ In addition, we will also use pandas and numpy libraries for data manipulation a
 
 The dataset imported is the [NFL passing data](https://www.pro-football-reference.com/years/2020/passing.htm) from the 2020 - 2021 season.
 
-![scrape data]()
+![scrape data](https://github.com/aclao89/NFL_Stats/blob/main/Images/scrape_data.PNG)
 
 The two functions via BeautifulSoup used to scrape the data were [findAll()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#find-all) and [getText()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#get-text), which return values based on the HTML of the page.
+
+
+Luckily, this dataset has been nicely formatted in a table, so we can find the table rows and columns to extract directly from the cells. In HTML, tr and td refer to table row and columns, respectively.
+
+![html_page](https://github.com/aclao89/NFL_Stats/blob/main/Images/table_row.PNG)
+
+![row_col_head](https://github.com/aclao89/NFL_Stats/blob/main/Images/row_column_header.PNG)
+
+Here we fetched the column names at index 0 since the first row are the table headers. Secondly, we fetched the rows at index 1; we skipped the first row since those were the table headers. We printed out the column header and the first row to confirm that we successfully scraped the data.
+
+# Create DataFrame from the scraped data
+Now we can combine column headers and quarterback stats into a pandas DataFrame.
+
+![pandas](https://github.com/aclao89/NFL_Stats/blob/main/Images/nfl_df.PNG)

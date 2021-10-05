@@ -19,4 +19,8 @@ Questions asked:
 1. What stats should we take into consideration to determine quarterback efficiency?
 2. Four NFL teams drafted quarterbacks from the 2020 NFL Draft Class: did teams take the correct steps in replacing their current respective quarterback? i.e. quarterbacks don't get replaced often since they are the main focus of a team's offense; switching quarterbacks too often can lead to inconsistent play schemes and ruin team chemistry.
 3. Aaron Rodgers was the 2020 NFL Most Valuable Player (MVP). How did his stats match up to other quarterback candidates in the MVP race?
-4. Does a high quarterback efficiency equate to higher chance of winning league MVP? 
+4. Does a high quarterback efficiency equate to higher chance of winning league MVP?
+
+________________________________________________________________________________________
+
+# Import required Python Libraries

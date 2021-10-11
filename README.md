@@ -71,7 +71,7 @@ The NFL determines [passer rating](https://www.sportscasting.com/what-is-an-nfl-
 
 ## Converting columns to appropriate data types for analysis
 
-We must convert the appropriate data into numerical data since we are unable to manipulate objects. We can use a simply for loop to iterate the columns into floats to analyze.
+We must convert the appropriate data into numerical data since we are unable to manipulate objects. We can use a simply for loop and a Pandas function, to_numeric(), to convert the objects to floats.
 
 ![data_type](https://github.com/aclao89/NFL_Stats/blob/main/Images/data_type.PNG)
 
@@ -102,3 +102,40 @@ Here is the final dataframe:
 Now, we are ready to begin our visualizations!
 
 # Data Visualizations
+
+## Dynamic rc settings
+
+First, we dynamically change the default runtime configuration [(rc)](https://matplotlib.org/stable/api/matplotlib_configuration_api.html#matplotlib.rcParams) settings. Here we modified general plot parameters: font type, font size, axes and tick labels. Since we are generating radar charts, the x-ticks represent the angles around the circle. The xtick.major.pad adds some breathing room between the tick labels and the axis.
+
+![rc_params](https://github.com/aclao89/NFL_Stats/blob/main/Images/rc_params.PNG)
+
+## Hex Codes for NFL Team colors
+
+To get the most accurate NFL team colors, we used this [website](https://teamcolorcodes.com/nfl-team-color-codes/). We grabbed the HEX code for the prominent color of each team and inputted into a dictionary.
+
+![hex_codes](https://github.com/aclao89/NFL_Stats/blob/main/Images/hex_codes.PNG)
+
+## Angles for Radar chart
+
+Since we have 6 categories to plot on a radar chart, so we will need to plot every 60 degrees (360 for a full circle). Using Numpy.linspace(), we  generate our points every 60 degrees.
+
+The setup adjusts where the labels will appear on the circle (instead at 0 degrees, it now appears at 30 degrees).
+
+![setup](https://github.com/aclao89/NFL_Stats/blob/main/Images/setup_chart.PNG)
+
+When we plot the data, we need to duplicate the first category so the shape doesn't remain open. The first and last angles correspond to the same point on the circle. Since our categories are the last six columns of the final dataframe, len(angles) - 1 represents the first of these categories. Then we append the value of the first category onto the end of this array to close the shape.
+
+![plotdata_fill](https://github.com/aclao89/NFL_Stats/blob/main/Images/plotdata_fill.PNG)
+
+Now we can set the labels for the categories (since we have one less category than angles, we omit the last element).
+
+![setlabels](https://github.com/aclao89/NFL_Stats/blob/main/Images/set_labels.PNG)
+
+Lastly, we will add the player name on top of each radar chart. We placed the text at (pi/2, 1.7), in absolute plot coordinates so it appears above the axis.
+
+![playername](https://github.com/aclao89/NFL_Stats/blob/main/Images/playername.PNG)
+
+
+We created a function to return an Numpy array for player data when an team name is passed.
+
+![qbdata](https://github.com/aclao89/NFL_Stats/blob/main/Images/qb_function.PNG)

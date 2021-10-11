@@ -139,3 +139,36 @@ Lastly, we will add the player name on top of each radar chart. We placed the te
 We created a function to return an Numpy array for player data when an team name is passed.
 
 ![qbdata](https://github.com/aclao89/NFL_Stats/blob/main/Images/qb_function.PNG)
+
+# Radar Charts
+
+## NFC West: Arizona Cardinals, San Francisco Niners, Seattle Seahawks, and Los Angeles Rams
+
+![nfc_west](https://github.com/aclao89/NFL_Stats/blob/main/Images/nfc_west.jpg)
+
+1. Russell Wilson, who is in his 10th year, is still performing at an elite level. He has reached at least 75% in all statistical categories. Wilson is also known for his mobile ability which is not reflected in this particular analysis.
+
+2. Kyler Murray is in his second year and shows some promises of a competent quarterback but definitely room for improvement to be considered an elite level.
+
+3. Jared Goff is in his sixth year but stats show very similar to sophomore Kyler Murray. He has less touchdowns and lower passer rating than Murray.
+
+4. Nick Mullen was signed on as starting quarterback after Jimmy Garoppolo suffered an season-ending injury. He has bounced around several teams and practice squads due to his inconsistency and poor decision-making.
+
+## Most Valuable Player Race + Curious Case of Deshawn Watson
+
+According to NFL's top [QB candidates](https://www.nfl.com/news/top-10-nfl-mvp-candidates-in-2020-aaron-rodgers-edges-patrick-mahomes) for MVP, Rodger(GNB), Mahomes(KAN), and Allen(BUF) were the 3 closest in running for the 2020-2021 season.
+
+![mvp_race](https://github.com/aclao89/NFL_Stats/blob/main/Images/mvp_race.jpg)
+
+1. Aaron Rodgers was ultimately named the NFL MVP in 2020. He posted the best passer rating in the NFL at 121.5, a touchdown to interception ratio of 48:5, and highest completion rate at 70.7%. Many critics believe his stellar performance as a response to Green Bay Packer's decision to draft a quarterback in the NFL 2020 draft after Rodger's mediocre performance in 2019.
+
+![pass_rate_df](https://github.com/aclao89/NFL_Stats/blob/main/Images/pass_rate_df.PNG)
+
+2. Patrick Mahomes, the reigning Super Bowl MVP, was in close contention with Rodgers. However, if we look closely at the statistics, Rodgers clearly edged out Mahomes in rating, touchdowns, and completion rate.
+
+3. Josh Allen ranked 4th overall in both passer rating and completion rate, 5th in touchdowns and passing yards. There is still room for improvement as he threw 10 interceptions in his early career as a sophomore.
+
+
+## NFC East: Dallas Cowboys, New York Giants, Washington Football Team, and Philadelphia Eagles
+
+![nfc_east](https://github.com/aclao89/NFL_Stats/blob/main/Images/nfc_east.jpg)

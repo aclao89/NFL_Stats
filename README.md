@@ -53,3 +53,52 @@ Here we fetched the column names at index 0 since the first row are the table he
 Now we can combine column headers and quarterback stats into a pandas DataFrame.
 
 ![pandas](https://github.com/aclao89/NFL_Stats/blob/main/Images/nfl_df.PNG)
+
+
+# Cleaning & Manipulating Data
+
+## Repetitive Column Names
+
+There are two columns named "Yds". One is for passing yards and other is for yards sacked (yards lost). We need to rename them to differentiate.
+
+![repetitive](https://github.com/aclao89/NFL_Stats/blob/main/Images/cleaning_data.PNG)
+
+## Columns for Passer Rating
+
+The NFL determines [passer rating](https://www.sportscasting.com/what-is-an-nfl-passer-rating-and-how-is-it-calculated/) by four metrics: completion rate (%), yards per passing attempt, touchdowns, and interceptions. Thus, we will select these as our categories for radar charts. I added total yards as well to reflect the cumulative yards throughout the season and description columns for readability.   
+
+![passer_rating](https://github.com/aclao89/NFL_Stats/blob/main/Images/passer_rating.PNG)
+
+## Converting columns to appropriate data types for analysis
+
+We must convert the appropriate data into numerical data since we are unable to manipulate objects. We can use a simply for loop to iterate the columns into floats to analyze.
+
+![data_type](https://github.com/aclao89/NFL_Stats/blob/main/Images/data_type.PNG)
+
+## Removing extra characters
+
+Pro football reference had put characters next to players names with the following achievements: "* Selected to Pro Bowl, + First-Team All-Pro". Here we used the str.replace() to remove both * and + from the player names.
+
+![replace](https://github.com/aclao89/NFL_Stats/blob/main/Images/data_cleaned_replace.PNG)
+
+## Filter out quarterbacks by average yards thrown
+
+To condense our data, I chose to filter our data down to only the quarterbacks who threw more than 1200 yards.
+
+![avg_yards](https://github.com/aclao89/NFL_Stats/blob/main/Images/filter_yards.PNG)
+
+## Rank function to determine statistical percentile
+
+Here we want to calculate each quarterback's statistical rank by percentile. Luckily, Pandas has a rank() function that can easily perform these calculations. Lastly, we want to inverse our interceptions rank since more interceptions negatively affect passer rating.
+
+![percentile](https://github.com/aclao89/NFL_Stats/blob/main/Images/percent_rank.PNG)
+
+## Final DataFrame for visualization
+
+Here is the final dataframe:
+
+![final_df](https://github.com/aclao89/NFL_Stats/blob/main/Images/final_df.PNG)
+
+Now, we are ready to begin our visualizations!
+
+# Data Visualizations

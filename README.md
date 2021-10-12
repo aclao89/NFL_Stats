@@ -171,14 +171,30 @@ According to NFL's top [QB candidates](https://www.nfl.com/news/top-10-nfl-mvp-c
 4. I was curious as to why Deshaun Watson was not included in the MVP conversations. Watson, as an individual case, clearly has the stats to warrant consideration. Below are his stats for the 2020 - 2021 season.
 
 1st - Passing yards
+<br>
 1st - Y/A
+<br>
 2nd - Overall Rating
+<br>
 3rd - Completion rate (Cmp %)
+<br>
 7th - Touchdowns
+<br>
 27th - Interceptions
 
 Based on those numbers, Watson should be in the conversation, but football is the ultimate team game. While Watson is certainly one of the most valuable players to any franchise in the NFL, his team's abysmal performance of 4-12 ultimately discounted any support for MVP candidacy.
 
+## Quarterbacks of the 2020 NFL Draft
+
+There were four quarterbacks [drafted](https://www.pro-football-reference.com/years/2020/draft.htm) in the 1st round.
+
+-Joe Burrow by Bengals (1st Pick)
+<br>
+-Tua Tagovailoa by Dolphins (5th pick)
+<br>
+-Justin Herbert by Chargers (6th pick)
+<br>
+-Jordan Love by Packers (26th pick) 
 
 ## NFC East: Dallas Cowboys, New York Giants, Washington Football Team, and Philadelphia Eagles
 

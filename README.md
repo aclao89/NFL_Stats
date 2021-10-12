@@ -194,8 +194,42 @@ There were four quarterbacks [drafted](https://www.pro-football-reference.com/ye
 <br>
 -Justin Herbert by Chargers (6th pick)
 <br>
--Jordan Love by Packers (26th pick) 
+-Jordan Love by Packers (26th pick)
+
+![qb_rookies](https://github.com/aclao89/NFL_Stats/blob/main/Images/rookie_qbs.jpg)
+
+1. Justin Herbert stands out the most. He has well-rounded stats and possesses solid decision making which didn't result in many interceptions like Joe Burrow and Tua Tagovailoa. Ultimately, Justin Herbert was named NFL Rookie of the Year.
+
+2. However, Justin Herbert played the most games at 15 whereas Joe and Tua were both marred by season ending injuries. Herbert played 5 to 6 more games than Joe and Tua, respectively.
+
+3. Jordan Love had no playing time at all! Rodgers was clearly on a mission to remain the starting quarterback for the Packers which resulted in the MVP award for the 2020 - 2021 season.
+
+![no_love](https://github.com/aclao89/NFL_Stats/blob/main/Images/no_love.PNG)
 
 ## NFC East: Dallas Cowboys, New York Giants, Washington Football Team, and Philadelphia Eagles
 
 ![nfc_east](https://github.com/aclao89/NFL_Stats/blob/main/Images/nfc_east.jpg)
+
+## NFC North: Green Bay Packers, Chicago Bears, Minnesota Vikings, Detroit selections
+
+![nfc_north](https://github.com/aclao89/NFL_Stats/blob/main/Images/nfc_north.jpg)
+
+## NFC South: Atlanta Falcons, Carolina Panthers, New Orleans Saints, Tampa Bay Buccaneers
+
+![nfc_south](https://github.com/aclao89/NFL_Stats/blob/main/Images/nfc_south.jpg)
+
+## AFC West: Las Vegas Raiders, Los Angeles Chargers, Denver Broncos, Kansas City Chiefs
+
+![afc_west](https://github.com/aclao89/NFL_Stats/blob/main/Images/afc_west.jpg)
+
+## AFC East: New England Patriots, Miami Dolphins, New York Jets, Buffalo Bills
+
+![afc_east](https://github.com/aclao89/NFL_Stats/blob/main/Images/afc_east.jpg)
+
+## AFC North: Pittsburgh Steelers, Cincinnati Bengals, Cleveland Browns, Baltimore Ravens
+
+![afc_north](https://github.com/aclao89/NFL_Stats/blob/main/Images/afc_north.jpg)
+
+## AFC South: Indianapolis Colts, Houston Texans, Tennessee Titans, Jacksonville Jaguars
+
+![afc_south](https://github.com/aclao89/NFL_Stats/blob/main/Images/afc_south.jpg)

@@ -160,13 +160,24 @@ According to NFL's top [QB candidates](https://www.nfl.com/news/top-10-nfl-mvp-c
 
 ![mvp_race](https://github.com/aclao89/NFL_Stats/blob/main/Images/mvp_race.jpg)
 
-1. Aaron Rodgers was ultimately named the NFL MVP in 2020. He posted the best passer rating in the NFL at 121.5, a touchdown to interception ratio of 48:5, and highest completion rate at 70.7%. Many critics believe his stellar performance as a response to Green Bay Packer's decision to draft a quarterback in the NFL 2020 draft after Rodger's mediocre performance in 2019.
+1. Aaron Rodgers was ultimately named the NFL MVP in 2020. He posted the best passer rating in the NFL at 121.5, a touchdown to interception ratio of 48:5, and highest completion rate at 70.7%. The Packers finished with a 13-3 record and top of their division. Many critics believe his stellar performance as a response to Green Bay Packer's decision to draft a quarterback in the NFL 2020 draft after Rodger's mediocre performance in 2019.
 
 ![pass_rate_df](https://github.com/aclao89/NFL_Stats/blob/main/Images/pass_rate_df.PNG)
 
-2. Patrick Mahomes, the reigning Super Bowl MVP, was in close contention with Rodgers. However, if we look closely at the statistics, Rodgers clearly edged out Mahomes in rating, touchdowns, and completion rate.
+2. Patrick Mahomes, the reigning Super Bowl MVP, was in close contention with Rodgers. The Chiefs finished the season with the best record at 14-2.  However, if we look closely at the statistics, Rodgers clearly edged out Mahomes in rating, touchdowns, and completion rate.
 
-3. Josh Allen ranked 4th overall in both passer rating and completion rate, 5th in touchdowns and passing yards. There is still room for improvement as he threw 10 interceptions in his early career as a sophomore.
+3. Josh Allen ranked 4th overall in both passer rating and completion rate, 5th in touchdowns and passing yards. The Bills finished with 13-3 and top of their division. There is still room for improvement as he threw 10 interceptions in his early career as a sophomore.
+
+4. I was curious as to why Deshaun Watson was not included in the MVP conversations. Watson, as an individual case, clearly has the stats to warrant consideration. Below are his stats for the 2020 - 2021 season.
+
+1st - Passing yards
+1st - Y/A
+2nd - Overall Rating
+3rd - Completion rate (Cmp %)
+7th - Touchdowns
+27th - Interceptions
+
+Based on those numbers, Watson should be in the conversation, but football is the ultimate team game. While Watson is certainly one of the most valuable players to any franchise in the NFL, his team's abysmal performance of 4-12 ultimately discounted any support for MVP candidacy.
 
 
 ## NFC East: Dallas Cowboys, New York Giants, Washington Football Team, and Philadelphia Eagles

@@ -113,6 +113,11 @@ export function createHistoricalController({getState,getMode,onApply,onManual,no
       let loaded=null,lastError;
       for(const source of candidates){
         try{
+          if(source.remote){
+            const pointer=await json(source.base+'latest.json?check='+Math.floor(Date.now()/60000));
+            if(!/^[a-f0-9]{40}$/.test(pointer.commit))throw new Error('Invalid published snapshot reference.');
+            source.base=source.base.replace('/main/',`/${pointer.commit}/`);
+          }
           const m=await json(source.base+'manifest.json?check='+Math.floor(Date.now()/60000));
           if(m.schema_version!==1)throw new Error('Unsupported data schema.');
           const [models,idx]=await Promise.all([json(source.base+'models.json?version='+m.version),json(source.base+'player-index.json?version='+m.version)]);

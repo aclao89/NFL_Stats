@@ -1,5 +1,10 @@
 # NFL_Stats
 
+## Gridiron probability app
+
+The new [Gridiron NFL Probability Lab](gridiron-app/README.md) adds historical data, game/player probability estimates, and weekly refresh workflows. The original analysis below is preserved.
+
+
 ![data_screen](https://github.com/aclao89/NFL_Stats/blob/main/Images/data_analysis_readme.jpg)
 
 Every data analysis starts with an idea and/or problem. The following step usually involves the crucial element: data. Data can be found everywhere and can be stored in various formats and data types.

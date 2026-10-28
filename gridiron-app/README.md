@@ -54,7 +54,7 @@ These are **5:17 AM Pacific during daylight saving time and 4:17 AM Pacific duri
 
 The workflow needs the repository's automatic `GITHUB_TOKEN` with `contents: write`; no personal access token or sports-provider secret belongs in the code. Public-repository scheduled workflows may be disabled after inactivity under GitHub's policies, so check the Actions page if freshness stops advancing.
 
-On app startup the included snapshot renders first, then the app checks the latest published JSON at `aclao89/NFL_Stats/main/gridiron-app/web/data/`. The **Check for updates** button repeats that check. If the repository path is not published or GitHub is unavailable, the included snapshot remains usable and clearly labeled. Checking for updates does not run the Python pipeline; only the scheduled or manual refresh job publishes new data.
+On app startup the included snapshot renders first, then the app checks `gridiron-app/web/data/latest.json` on the repository's `main` branch. This pointer selects an immutable commit for every data file, so a cached pointer still returns a complete snapshot. The **Check for updates** button repeats that check. If GitHub is unavailable, the included snapshot remains usable and clearly labeled. Checking for updates does not run the Python pipeline; only the scheduled or manual refresh job publishes new data.
 
 ## Model details
 

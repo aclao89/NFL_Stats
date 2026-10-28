@@ -47,8 +47,19 @@ jobs:
           git add web/data
           if ! git diff --cached --quiet; then
             git commit -m "Refresh NFL stats and historical model snapshot"
-            git push origin HEAD:main
           fi
+          # Keep the feed pinned to one immutable data commit. A cached pointer
+          # still refers to a complete snapshot, never a mix of refreshed files.
+          GRIDIRON_SNAPSHOT_SHA=$(git rev-parse HEAD) python - <<'PY'
+          import json, os
+          from pathlib import Path
+          Path('web/data/latest.json').write_text(json.dumps({'commit': os.environ['GRIDIRON_SNAPSHOT_SHA']}) + '\n')
+          PY
+          git add web/data/latest.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Point app feed to verified NFL data snapshot"
+          fi
+          git push origin HEAD:main
       - uses: actions/upload-artifact@v4
         with:
           name: gridiron-app

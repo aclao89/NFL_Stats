@@ -1,86 +1,159 @@
-# Gridiron — NFL Probability Lab
+# Gridiron app guide
 
-An actual NFL data app, extending the original probability calculator. Includes a usable historical snapshot, a reproducible Python data pipeline, trained game projections, a chronological game backtest, and scheduled GitHub Actions refreshes. No paid stats key is required.
+[Project overview](../README.md) · [Technical documentation](../docs/TECHNICAL.md) · [Contributing and publishing](../docs/PUBLISHING.md)
 
-The existing repository's 2020/2021 notebooks and images are preserved.
+This directory contains the static NFL probability app and its reproducible historical-data pipeline. Use the included snapshot to run the app, or install the Python data dependencies to download newer records and rebuild the game model.
 
 ## Run the app
 
-The frontend is buildless and includes its data. From the repository root:
+Start from the **repository root**, `NFL_Stats` or `NFL_Stats-main`, containing this `gridiron-app` directory.
 
-```bash
-python -m http.server 8080 --directory gridiron-app/web
+Windows:
+
+```powershell
+py -m http.server 8080 --bind 127.0.0.1 --directory gridiron-app/web
 ```
 
-Open `http://localhost:8080`. A Python backend is not needed to use the app. ES modules require HTTP; do not double-click `index.html`.
-
-## What it does
-
-- **Game outcomes:** choose an upcoming matchup or any two teams. Historical mode estimates score margin, total points, and residual variability using completed regular-season games since 2015. Predict a winner, home spread cover, or over/under total. Ties and integer-line pushes are separate.
-- **Player stats:** select a recorded QB, RB, FB, WR, or TE, a stat, seasons, and the last 5/10/20/40/all recorded appearances. The selected sample fills the mean, SD, historical hit rate, and uncertainty interval. Enter your desired threshold. Initial player lines are near the sample mean; they are not sportsbook lines.
-- **Touchdowns:** estimates rushing plus receiving touchdowns. This deliberately excludes passing, return, defensive, and fumble-recovery touchdowns. Passing TDs have a separate Player stats option.
-- **Editable scenarios:** turn historical auto-fill off or edit a projection. Your assumptions replace the historical baseline. Saved scenarios retain their exact inputs, sample provenance, and as-of date; reloading them disables auto-fill so new data cannot overwrite them.
-- **Evidence:** the model report shows data coverage, train/calibration/test periods, Brier scores, score errors, and limitations. The player empirical check is not a player forecasting backtest.
-- **Portability:** save scenarios in browser storage, copy results, export CSV, or host `web/` on a static web server. User scenarios do not get uploaded to GitHub.
-
-## Refresh and backfill
-
-Python 3.11+ is required for the pinned data dependencies; CI uses Python 3.12. From `gridiron-app/`:
+macOS / Linux:
 
 ```bash
-python -m venv .venv
-# Activate .venv for your shell, then:
-python -m pip install -r requirements.txt
-python -m gridiron.refresh
-python -m gridiron.validate web/data
+python3 -m http.server 8080 --bind 127.0.0.1 --directory gridiron-app/web
 ```
 
-Defaults: completed **2015–current NFL season games**, **2021–current NFL season player stats**. January and February belong to the preceding NFL season. Use `--start-season`, `--player-start`, and `--through` to change the window. For a full source re-download, pass `--force`. Raw cached downloads are ignored by Git.
+Open [http://localhost:8080](http://localhost:8080), keep the terminal open, and press **Ctrl+C** to stop. If your terminal is already inside `gridiron-app`, use `--directory web` instead. Opening `web/index.html` directly does not provide the HTTP origin needed for modules and data loading.
 
-The pipeline validates source schemas and duplicate keys, joins player rows only to completed games, preserves recorded zeros and negative yardage, and publishes all JSON files as a single snapshot. A failed refresh leaves the last complete snapshot intact. Files include version identifiers and source hashes; frontend version checks reject mixed snapshots.
+## Use the calculator
 
-Only QB/RB/FB/WR/TE source-recorded regular-season appearances enter player samples. DNPs and appearances missing from the source are **not** manufactured as zeros. Selecting a player does not establish current team membership, an active roster spot, a starting role, or injury availability. Latest source season and latest recorded team are labeled accordingly.
+### Game outcomes
 
-## Automatic weekly updates
+Choose an upcoming matchup or two different teams, then select a home win, away win, home spread cover, total over, or total under. Historical auto-fill supplies the score projection and residual variability. A custom matchup assumes a non-neutral home venue and equal rest; a listed fixture supplies the schedule's venue and rest values.
 
-`.github/workflows/gridiron-refresh.yml` refreshes both schedules and player stats, retrains the game baseline, validates the result, and commits `gridiron-app/web/data/` to `main`:
+For a home spread of `-3`, the home team must win by more than three points to cover. Integer thresholds can produce a tie or push; half-point thresholds cannot. The app displays that probability separately from a successful or opposite outcome.
 
-- Tuesday at **12:17 UTC**, after Monday games.
-- Thursday at **12:17 UTC**, after midweek stat corrections.
-- Also supports **Run workflow** for an immediate refresh.
-- Pipeline or refresh-workflow changes on `main` also run a refresh, including the initial installation.
+### Player stats and touchdowns
 
-These are **5:17 AM Pacific during daylight saving time and 4:17 AM Pacific during standard time**. GitHub scheduled jobs may be delayed. The workflow must be on the default branch and Actions must be enabled. Protected branches that prohibit the workflow's data commit require your normal review/merge route; the app retains the previous snapshot if publishing fails. A workflow file prepared locally is not an activated schedule.
+Select a player, a stat, an optional season, and the last 5/10/20/40/all recorded appearances. At least three matching appearances are required. Passing stats filter for quarterbacks; receiving yards and receptions filter for RB/FB/WR/TE. The team label and team filter use the player's latest recorded team, and selected history can include earlier teams.
 
-The workflow needs the repository's automatic `GITHUB_TOKEN` with `contents: write`; no personal access token or sports-provider secret belongs in the code. Public-repository scheduled workflows may be disabled after inactivity under GitHub's policies, so check the Actions page if freshness stops advancing.
+Supported player stats are passing yards, rushing yards, receiving yards, receptions, completions, and passing touchdowns. Yardage uses a normal approximation; counts use Poisson. The **Touchdowns** tab uses rushing plus receiving touchdowns only. It excludes passing, return, defensive, and fumble-recovery touchdowns.
 
-On app startup the included snapshot renders first, then the app checks `gridiron-app/web/data/latest.json` on the repository's `main` branch. This pointer selects an immutable commit for every data file, so a cached pointer still returns a complete snapshot. The **Check for updates** button repeats that check. If GitHub is unavailable, the included snapshot remains usable and clearly labeled. Checking for updates does not run the Python pipeline; only the scheduled or manual refresh job publishes new data.
+Source-recorded zeros and negative yardage are retained. DNPs and missing source appearances are not created as zeros. **Latest-season players** means players with a record in the latest loaded source season; it is not an active-roster or injury filter.
 
-## Model details
+### Manual assumptions and scenarios
 
-Game features are each team's **prior 10** games of points scored and allowed, Elo difference, venue, and known schedule rest. Franchise aliases are normalized. A result is added to its team's history only **after** that game's features are constructed.
+Turn historical auto-fill off, or edit a projection, to enter your own assumptions. The player adjustment applies a percentage change to the expected average; it does not run an opponent or injury model.
 
-Game dates are partitioned chronologically into approximately 75% training, 12.5% calibration, and 12.5% held-out testing. Ridge coefficients and scaling use only training data. Calibration supplies an intercept correction and residual SD. The held-out period is excluded from fitting; earlier test-game results may enter later test-game rolling features, matching real forecasting. The published forecasts use these evaluated coefficients and current team histories. There is no random train/test split or use of closing betting lines as a feature.
+**Manual example** loads illustrative inputs. **Save scenario** stores the exact scenario, probability, and available historical provenance in browser storage, with a limit of 24 saved scenarios. Reloading disables auto-fill to protect those saved inputs from replacement by newer data. The saved model inputs are preserved; returning to historical auto-fill deliberately applies the currently loaded snapshot.
 
-Score-margin/total probabilities use a normal approximation with an integer continuity correction. Player yards use a selected-sample normal approximation; reception/completion/passing-TD counts and rushing+receiving TDs use Poisson. The player sample is equally weighted, carries across seasons when selected, and is not automatically opponent-adjusted. A constant yardage sample uses a disclosed SD floor of one unit. These baselines can miss skew, changing usage, injuries, and football scoring patterns. The game backtest must not be presented as validation of player props.
+**Export CSV** exports saved scenarios, including probability, push probability, historical counts, and raw input JSON. CSV is an export; there is no CSV-import or account-sync feature. The optional price comparison accepts manually entered American odds and accounts for returned stakes on pushes.
 
-## Checks
+## How fresh data reaches the app
+
+The app first loads its bundled files from `web/data/`. It then checks:
+
+```text
+https://raw.githubusercontent.com/aclao89/NFL_Stats/main/gridiron-app/web/data/latest.json
+```
+
+That file contains an immutable Git commit reference. All remote manifest, model, player-index, and player-history requests use that commit. This keeps one snapshot consistent while GitHub caches update. A cached pointer can temporarily select an older complete snapshot.
+
+The data panel identifies **Published GitHub data** or **Included data snapshot**. If the remote read fails, the included snapshot remains usable. A snapshot older than seven days is flagged. **Check for updates** retries the published-data read; it does not download source CSVs or retrain the model.
+
+## Automatic refresh workflow
+
+The workflow is [`.github/workflows/gridiron-refresh.yml`](../.github/workflows/gridiron-refresh.yml):
+
+- Tuesday and Thursday at **12:17 UTC**.
+- Manual dispatch from **Actions → Refresh Gridiron NFL data → Run workflow**, selecting `main`.
+- Pushes to `main` affecting the refresh workflow, `gridiron-app/gridiron/**`, or `gridiron-app/requirements.txt`.
+
+It installs the pinned dependencies, runs Python and Node tests, downloads the configured historical and current-season data with `--force`, retrains, validates, creates a data commit and a pointer commit, pushes them together, and uploads the static app as a run artifact. The writer uses GitHub's automatic `GITHUB_TOKEN` with `contents: write`.
+
+The schedule requires the workflow on the default branch and Actions enabled. The checkout and publishing destination are explicitly `main`. Branch protections can prevent automatic publishing. Scheduled runs can be delayed, and public-repository schedules can be disabled after inactivity; inspect the [Actions page](https://github.com/aclao89/NFL_Stats/actions) if the snapshot stops advancing.
+
+## Refresh or backfill locally
+
+Use **Python 3.12**, matching CI, for the documented data-pipeline environment. Node 22 is used for JavaScript tests. Python dependencies are pinned in [`requirements.txt`](requirements.txt).
+
+These commands start at the **repository root** and then change into `gridiron-app`. A virtual environment keeps the pipeline dependencies together. Calling its Python executable directly also avoids shell activation differences.
+
+Windows:
+
+```powershell
+cd gridiron-app
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m gridiron.refresh --force
+.\.venv\Scripts\python.exe -m gridiron.validate web/data
+```
+
+macOS / Linux:
 
 ```bash
-python -m unittest discover -s tests -p 'test_*.py' -v
-node --test tests/*.test.mjs
-python -m gridiron.validate web/data
+cd gridiron-app
+python3.12 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m gridiron.refresh --force
+.venv/bin/python -m gridiron.validate web/data
 ```
 
-Tests cover temporal leakage, future/unfinished games, duplicate and missing-source records, zero and negative stats, sample selection, probability conservation, spread signs, pushes, touchdown counts, and all 992 distinct home/away matchup projections. `gridiron-ci.yml` runs these checks on app changes.
+Defaults are 2015–current NFL season for completed game results and 2021–current NFL season for player stats. January and February use the previous NFL season. The CLI supports:
 
-## Data attribution
+| Option | Default / purpose |
+| --- | --- |
+| `--start-season` | `2015`; earliest completed game season. |
+| `--player-start` | `2021`; earliest player-stat season. |
+| `--through` | Current NFL season; latest completed-game/player-stat season to import. |
+| `--output` | `web/data`; destination snapshot directory. |
+| `--cache` | `.cache/gridiron`; raw player-download cache. |
+| `--force` | Re-download all player seasons instead of reusing eligible cached seasons. Schedules are fetched on every run. |
 
-Data: [nflverse/nflverse-data](https://github.com/nflverse/nflverse-data) and [nflverse/nfldata](https://github.com/nflverse/nfldata), including schedules maintained by Lee Sharpe. These inputs are used under **CC BY 4.0**; attribution is preserved in the app and snapshot manifest. This app transforms the source into cleaned histories, rolling features, fitted models, and displayed estimates. No FTN charting data is used.
+Seasons must satisfy `1999 ≤ start-season ≤ player-start ≤ through ≤ current calendar year`. Training also requires enough completed games for separate training, calibration, and test periods. Use the virtual-environment Python from above with `-m gridiron.refresh --help` to see the CLI options.
 
-- [Player statistics](https://nflreadr.nflverse.com/reference/load_player_stats.html)
-- [Schedule data](https://nflreadr.nflverse.com/reference/load_schedules.html)
-- [Source update schedule](https://nflreadr.nflverse.com/articles/nflverse_data_schedule.html)
-- [Chronological validation](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html)
+A local refresh replaces the files in the selected output directory; it does not push them to GitHub or update the hosted app's bundled files. Use the GitHub workflow to publish the shared feed and its pointer. Manual publication of local output must keep the data commit and `latest.json` pointer aligned; see [the publishing contract](../docs/TECHNICAL.md#immutable-feed-publishing-contract).
 
-NFL data availability can lag games and may be corrected later. The app displays completed-game and player-stat cutoffs separately; the refresh timestamp is not a promise of complete real-time coverage.
+## Run checks
+
+From `gridiron-app`, after installing the dependencies above:
+
+Windows:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover -s tests -p 'test_*.py' -v
+node --test tests/model.test.mjs tests/historical.test.mjs
+.\.venv\Scripts\python.exe -m gridiron.validate web/data
+```
+
+macOS / Linux:
+
+```bash
+.venv/bin/python -m unittest discover -s tests -p 'test_*.py' -v
+node --test tests/model.test.mjs tests/historical.test.mjs
+.venv/bin/python -m gridiron.validate web/data
+```
+
+The current suite has five Python tests and twelve Node tests, including all 992 distinct home/away team pairings. CI runs the suite and snapshot validation on app and workflow changes. Documentation-only changes outside those path filters do not trigger the app workflow.
+
+## Troubleshooting
+
+| Symptom | What to check |
+| --- | --- |
+| `py` or `python3` is not recognized | Install [Python](https://www.python.org/downloads/), reopen the terminal, and use the launcher available on your system. |
+| `py -3.12` or `python3.12` is not found | Install Python 3.12 for the pipeline environment. The simple app launch can use another installed Python 3. |
+| `cd NFL_Stats` cannot find the folder | Check where you extracted/cloned the project and its exact name, which may be `NFL_Stats-main`. |
+| Directory listing or `404` at localhost | Run from the folder containing `gridiron-app`, and keep `--directory gridiron-app/web`; from inside the app folder, use `--directory web`. |
+| Port 8080 is already in use | Change `8080` to `8081` in the command and open `http://localhost:8081`. |
+| App fails when opened as a file | Start the HTTP server and open its localhost URL. |
+| Included data is shown | Check internet access and the latest refresh run; then select **Check for updates**. The included snapshot remains available while the feed is unavailable. |
+| Player is absent or sample is too small | Clear team/search filters, include earlier seasons, or widen the appearance window. Missing appearances are not inferred. |
+| Editing or reloading turns auto-fill off | This preserves the selected manual/saved assumptions. Re-enable it to apply the currently loaded historical data. |
+| Saved scenarios seem missing | Use the same browser and origin as before. Hosted and localhost storage are separate; clearing browser data removes saved scenarios. |
+| Refresh ran, but cutoffs did not change | Check the manifest's separate source cutoffs and warnings. A successful download does not guarantee newer source records exist. |
+| GitHub workflow cannot push | Inspect permissions, `main` branch protections, and the run logs. Retain the last published pointer while resolving the failure. |
+
+## Hosting and development
+
+Serve or deploy the contents of `web/` as static assets with `index.html` at the site's root. Use a static host with correct MIME types for `.mjs`, JSON, CSS, and SVG and with public HTTPS access to the GitHub raw-data origin. Local scenario storage remains specific to each hosting origin.
+
+Frontend source edits require updating the deployed static app. New published data is read through the GitHub feed without redeploying the frontend. The hosted private instance uses the same frontend with a separate hosting sign-in gate; the GitHub Actions data workflow does not itself deploy that instance.
+
+For a fork, change `DEFAULT_REMOTE` in [`web/historical.mjs`](web/historical.mjs), review the workflow's hardcoded `main` branch, and update project links. For architecture, schemas, formulas, and operational recovery, see [the technical documentation](../docs/TECHNICAL.md).

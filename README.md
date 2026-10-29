@@ -1,240 +1,111 @@
-# NFL_Stats
+# Gridiron — NFL Probability Lab
 
-## Gridiron probability app
+An NFL analysis app that turns a matchup, player stat, or touchdown scenario into an estimated probability. Start with historical NFL results, adjust the assumptions, and compare outcomes in your browser.
 
-The new [Gridiron NFL Probability Lab](gridiron-app/README.md) adds historical data, game/player probability estimates, and weekly refresh workflows. The original analysis below is preserved.
+[Open the hosted app](https://gridiron-probability-lab.alexclao89.chatgpt.site) · [App guide](gridiron-app/README.md) · [Technical documentation](docs/TECHNICAL.md) · [Contributing and publishing](docs/PUBLISHING.md)
 
+The hosted instance is private and requires an authorized ChatGPT account. You can also run the app on your own computer using the steps below.
 
-![data_screen](https://github.com/aclao89/NFL_Stats/blob/main/Images/data_analysis_readme.jpg)
+## What you can analyze
 
-Every data analysis starts with an idea and/or problem. The following step usually involves the crucial element: data. Data can be found everywhere and can be stored in various formats and data types.
+| Scenario | Inputs and output |
+| --- | --- |
+| Game outcomes | Select teams or an upcoming matchup; estimate a home/away win, home spread cover, or game total over/under. |
+| Player stats | Select a player, stat, seasons, and sample window; estimate the chance of exceeding or falling below your threshold. |
+| Touchdowns | Estimate zero, exactly a selected number, or at least a selected number of rushing plus receiving touchdowns. |
+| Your own assumptions | Edit projected averages, variability, or player adjustments and see the probability change. |
+| Saved scenarios | Save up to 24 scenarios in your browser, restore their inputs, copy a result, and export CSV. |
 
-For those of us who love diving into data, there are lots of resources to attain this part of the process. Whether it’s through Kaggle, Data World, or search engines powered Google, data is easily available. However, sometimes the datasets pulled from the mentioned resources might not have all the data pertinent for a thorough analysis.
+The app reports model estimates. Its game-model backtest is separate from the historical player hit rates; player estimates have not been validated by that game backtest.
 
-This issue of getting incomplete or insufficient data brought me to explore web scraping to create a dataset. I have worked on an [basketball analytics project](https://github.com/aclao89/NBA_All_Stars). The project was an analysis of NBA All-Star selections from 2000 to 2016 to examine the commonalities and differences over time. As I loaded and cleaned the dataset pulled from Kaggle, I realized the dataset did not have all the stats pertinent to my analysis. To avoid the same issue, I went directly to a reputable resource and did further research to find ways to pull data directly from a website.
+## Launch on your computer
 
-For this project, I went to [Pro Football Reference](https://www.pro-football-reference.com/); this site is an encyclopedia for all NFL stats. My research resulted in discovering a great Python library called [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/). It used for web scraping purposes to pull the data out of HTML and XML files. It creates a parse tree from page source code that can be used to extract data in a hierarchical and more readable manner.
+You need Python 3 and a modern browser to serve the app locally. The app includes a data snapshot and calculates probabilities in the browser. Python's standard library is sufficient for this step; the data-pipeline dependencies are installed separately only when you want to refresh or train locally.
 
-The purpose of this project was to pull quarterback stats from the 2020-2021 NFL season from [Pro Football Reference](https://www.pro-football-reference.com/) and utilized radar charts to assess efficiency.
+### 1. Get the repository
 
-A [radar chart](https://www.data-to-viz.com/caveat/spider.html) is a two-dimensional chart type designed to plot one or more series of values over multiple quantitative variables. Each variable has its own axis, all axes are joined in the center of the figure.
+With Git installed:
 
+```bash
+git clone https://github.com/aclao89/NFL_Stats.git
+cd NFL_Stats
+```
 
-## Questions asked:
+Or choose **Code → Download ZIP** on [GitHub](https://github.com/aclao89/NFL_Stats), extract it, and open a terminal in the extracted folder. A ZIP download usually produces a folder named `NFL_Stats-main`.
 
-1. What stats should we take into consideration to determine quarterback efficiency?
-2. Four NFL teams drafted quarterbacks from the 2020 NFL Draft Class: did teams take the correct steps in replacing their current respective quarterback? i.e. quarterbacks don't get replaced often since they are the main focus of a team's offense; switching quarterbacks too often can lead to inconsistent play schemes and ruin team chemistry.
-3. Aaron Rodgers was the 2020 NFL Most Valuable Player (MVP). How did his stats match up to other quarterback candidates in the MVP race?
-4. Does a high quarterback efficiency equate to higher chance of winning league MVP?
+**Run the launch command from the repository root: the folder containing `gridiron-app`.** If you are in its parent folder, first run `cd NFL_Stats` or `cd NFL_Stats-main`, matching the folder on your computer.
 
-________________________________________________________________________________________
+### 2. Start the local server
 
-# Import required Python Libraries
+Windows, in PowerShell or Command Prompt:
 
-We will use two modules to open the webpage and scrape the data: urllib.request and BeautifulSoup, respectively.
+```powershell
+py -m http.server 8080 --bind 127.0.0.1 --directory gridiron-app/web
+```
 
-In addition, we will also use pandas and numpy libraries for data manipulation as well as matplotlib for the radar charts.
+macOS or Linux, in Terminal:
 
-![import sc](https://github.com/aclao89/NFL_Stats/blob/main/Images/import_lib.PNG)
+```bash
+python3 -m http.server 8080 --bind 127.0.0.1 --directory gridiron-app/web
+```
 
-# Scrape the data
+### 3. Open the app
 
-The dataset imported is the [NFL passing data](https://www.pro-football-reference.com/years/2020/passing.htm) from the 2020 - 2021 season.
+Visit **[http://localhost:8080](http://localhost:8080)**. Keep the terminal open while using it; press **Ctrl+C** in the terminal to stop the server.
 
-![scrape data](https://github.com/aclao89/NFL_Stats/blob/main/Images/scrape_data.PNG)
+Serve the app over HTTP rather than opening `index.html` directly: its JavaScript modules and JSON data need an HTTP origin.
 
-The two functions via BeautifulSoup used to scrape the data were [findAll()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#find-all) and [getText()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#get-text), which return values based on the HTML of the page.
+## Your first prediction
 
+1. Choose **Game outcomes**, **Player stats**, or **Touchdowns**.
+2. Leave **Auto-fill from historical NFL data** enabled to use recorded results as the starting point.
+3. Select the matchup or player. For player stats, select a stat and a sample window of 5, 10, 20, 40, or all recorded appearances, with an optional season filter.
+4. Enter your desired threshold or event. For example, choose passing yards and an over/under threshold of `249.5`.
+5. Read the estimated chance, displayed assumptions, and historical sample information. Editing a projection switches historical auto-fill off so your scenario controls the result.
+6. Select **Save scenario** to keep the exact inputs, or **Copy result** to share the text. Use **Export CSV** to download saved results.
 
-Luckily, this dataset has been nicely formatted in a table, so we can find the table rows and columns to extract directly from the cells. In HTML, tr and td refer to table row and columns, respectively.
+Initial player thresholds are near the historical sample average; they are not live market lines. A player selection indicates recorded history, not current availability or a starting role.
 
-![html_page](https://github.com/aclao89/NFL_Stats/blob/main/Images/table_row.PNG)
+## Historical data and automatic updates
 
-![row_col_head](https://github.com/aclao89/NFL_Stats/blob/main/Images/row_column_header.PNG)
+The default pipeline uses completed regular-season **game results from 2015 onward** and recorded regular-season **QB/RB/FB/WR/TE player appearances from 2021 onward**. Each refresh extends through the current NFL season, as source data becomes available. Earlier history can be configured in the [app guide](gridiron-app/README.md#refresh-or-backfill-locally).
 
-Here we fetched the column names at index 0 since the first row are the table headers. Secondly, we fetched the rows at index 1; we skipped the first row since those were the table headers. We printed out the column header and the first row to confirm that we successfully scraped the data.
+[GitHub Actions](https://github.com/aclao89/NFL_Stats/actions) refreshes the historical and current-season data, rebuilds the game model, checks the result, and publishes a complete snapshot:
 
-# Create DataFrame from the scraped data
-Now we can combine column headers and quarterback stats into a pandas DataFrame.
+| Trigger | Timing |
+| --- | --- |
+| Scheduled refresh | Tuesdays and Thursdays at **12:17 UTC**: 5:17 AM Pacific during daylight saving time, 4:17 AM during standard time. |
+| Manual refresh | **Actions → Refresh Gridiron NFL data → Run workflow**, selecting `main`. |
+| Pipeline changes | Changes to the refresh workflow, Python pipeline, or requirements pushed to `main`. |
 
-![pandas](https://github.com/aclao89/NFL_Stats/blob/main/Images/nfl_df.PNG)
+The app loads its included snapshot first, then checks a published GitHub pointer and reads all data files from one immutable commit. **Check for updates** repeats that read; it does not start a training job. Internet access is needed to retrieve newer data.
 
+The data panel shows completed-game and player-stat cutoffs separately. Source publication, corrections, and GitHub scheduling can introduce delays, so a new refresh timestamp does not imply live coverage.
 
-# Cleaning & Manipulating Data
+## Project layout
 
-## Repetitive Column Names
+| Path | Purpose |
+| --- | --- |
+| [`gridiron-app/web/`](gridiron-app/web/) | Static app, probability engine, historical-data controller, and bundled JSON snapshot. |
+| [`gridiron-app/gridiron/`](gridiron-app/gridiron/) | Python download, normalization, model training, and validation pipeline. |
+| [`gridiron-app/tests/`](gridiron-app/tests/) | Python and Node tests. |
+| [`.github/workflows/`](.github/workflows/) | App checks and automatic data refresh. |
+| [`docs/TECHNICAL.md`](docs/TECHNICAL.md) | Architecture, data schemas, formulas, validation, deployment, and maintenance. |
+| [`docs/PUBLISHING.md`](docs/PUBLISHING.md) | Applying documentation updates and pushing a branch for review. |
+| [`docs/legacy-qb-analysis.md`](docs/legacy-qb-analysis.md) | Original quarterback-analysis narrative and figures. |
 
-There are two columns named "Yds". One is for passing yards and other is for yards sacked (yards lost). We need to rename them to differentiate.
+The original notebooks and `Images/` remain part of the repository. Their historical analysis is independent of the current probability app.
 
-![repetitive](https://github.com/aclao89/NFL_Stats/blob/main/Images/cleaning_data.PNG)
+## Model scope and saved data
 
-## Columns for Passer Rating
+Game projections use prior team results, Elo, venue, and rest. Player estimates use the selected historical sample. The app has no live injury, depth-chart, weather, roster-availability, or odds feed. Touchdown estimates cover **rushing plus receiving touchdowns**; passing touchdowns are a separate player-stat option.
 
-The NFL determines [passer rating](https://www.sportscasting.com/what-is-an-nfl-passer-rating-and-how-is-it-calculated/) by four metrics: completion rate (%), yards per passing attempt, touchdowns, and interceptions. Thus, we will select these as our categories for radar charts. I added total yards as well to reflect the cumulative yards throughout the season and description columns for readability.   
+Scenarios stay in your browser's local storage. They are not uploaded to GitHub or synchronized between devices, browsers, the hosted app, and `localhost`. Export CSV before clearing browser data or moving to another device.
 
-![passer_rating](https://github.com/aclao89/NFL_Stats/blob/main/Images/passer_rating.PNG)
+For setup failures, see [troubleshooting](gridiron-app/README.md#troubleshooting). For formulas, assumptions, checks, and how to change the data window, see the [technical guide](docs/TECHNICAL.md).
 
-## Converting columns to appropriate data types for analysis
+## Data attribution
 
-We must convert the appropriate data into numerical data since we are unable to manipulate objects. We can use a simply for loop and a Pandas function, to_numeric(), to convert the objects to floats.
+Data: [nflverse/nflverse-data](https://github.com/nflverse/nflverse-data) and [nflverse/nfldata](https://github.com/nflverse/nfldata), including schedules maintained by Lee Sharpe. The app preserves upstream attribution and records source URLs and SHA-256 hashes in each snapshot manifest. It transforms the inputs into cleaned histories, rolling features, fitted models, and displayed estimates.
 
-![data_type](https://github.com/aclao89/NFL_Stats/blob/main/Images/data_type.PNG)
-
-## Removing extra characters
-
-Pro football reference had put characters next to players names with the following achievements: "* Selected to Pro Bowl, + First-Team All-Pro". Here we used the str.replace() to remove both * and + from the player names.
-
-![replace](https://github.com/aclao89/NFL_Stats/blob/main/Images/data_cleaned_replace.PNG)
-
-## Filter out quarterbacks by average yards thrown
-
-To condense our data, I chose to filter our data down to only the quarterbacks who threw more than 1200 yards.
-
-![avg_yards](https://github.com/aclao89/NFL_Stats/blob/main/Images/filter_yards.PNG)
-
-## Rank function to determine statistical percentile
-
-Here we want to calculate each quarterback's statistical rank by percentile. Luckily, Pandas has a rank() function that can easily perform these calculations. Lastly, we want to inverse our interceptions rank since more interceptions negatively affect passer rating.
-
-![percentile](https://github.com/aclao89/NFL_Stats/blob/main/Images/percent_rank.PNG)
-
-## Final DataFrame for visualization
-
-Here is the final dataframe:
-
-![final_df](https://github.com/aclao89/NFL_Stats/blob/main/Images/final_df.PNG)
-
-Now, we are ready to begin our visualizations!
-
-# Data Visualizations
-
-## Dynamic rc settings
-
-First, we dynamically change the default runtime configuration [(rc)](https://matplotlib.org/stable/api/matplotlib_configuration_api.html#matplotlib.rcParams) settings. Here we modified general plot parameters: font type, font size, axes and tick labels. Since we are generating radar charts, the x-ticks represent the angles around the circle. The xtick.major.pad adds some breathing room between the tick labels and the axis.
-
-![rc_params](https://github.com/aclao89/NFL_Stats/blob/main/Images/rc_params.PNG)
-
-## Hex Codes for NFL Team colors
-
-To get the most accurate NFL team colors, we used this [website](https://teamcolorcodes.com/nfl-team-color-codes/). We grabbed the HEX code for the prominent color of each team and inputted into a dictionary.
-
-![hex_codes](https://github.com/aclao89/NFL_Stats/blob/main/Images/hex_codes.PNG)
-
-## Angles for Radar chart
-
-Since we have 6 categories to plot on a radar chart, so we will need to plot every 60 degrees (360 for a full circle). Using Numpy.linspace(), we  generate our points every 60 degrees.
-
-The setup adjusts where the labels will appear on the circle (instead at 0 degrees, it now appears at 30 degrees).
-
-![setup](https://github.com/aclao89/NFL_Stats/blob/main/Images/setup_chart.PNG)
-
-When we plot the data, we need to duplicate the first category so the shape doesn't remain open. The first and last angles correspond to the same point on the circle. Since our categories are the last six columns of the final dataframe, len(angles) - 1 represents the first of these categories. Then we append the value of the first category onto the end of this array to close the shape.
-
-![plotdata_fill](https://github.com/aclao89/NFL_Stats/blob/main/Images/plotdata_fill.PNG)
-
-Now we can set the labels for the categories (since we have one less category than angles, we omit the last element).
-
-![setlabels](https://github.com/aclao89/NFL_Stats/blob/main/Images/set_labels.PNG)
-
-Lastly, we will add the player name on top of each radar chart. We placed the text at (pi/2, 1.7), in absolute plot coordinates so it appears above the axis.
-
-![playername](https://github.com/aclao89/NFL_Stats/blob/main/Images/playername.PNG)
-
-
-We created a function to return an Numpy array for player data when an team name is passed.
-
-![qbdata](https://github.com/aclao89/NFL_Stats/blob/main/Images/qb_function.PNG)
-
-# Radar Charts
-
-## NFC West: Arizona Cardinals, San Francisco Niners, Seattle Seahawks, and Los Angeles Rams
-
-![nfc_west](https://github.com/aclao89/NFL_Stats/blob/main/Images/nfc_west.jpg)
-
-1. Russell Wilson, who is in his 10th year, is still performing at an elite level. He has reached at least 75% in all statistical categories. Wilson is also known for his mobile ability which is not reflected in this particular analysis.
-
-2. Kyler Murray is in his second year and shows some promises of a competent quarterback but definitely room for improvement to be considered an elite level.
-
-3. Jared Goff is in his sixth year but stats show very similar to sophomore Kyler Murray. He has less touchdowns and lower passer rating than Murray.
-
-4. Nick Mullen was signed on as starting quarterback after Jimmy Garoppolo suffered an season-ending injury. He has bounced around several teams and practice squads due to his inconsistency and poor decision-making.
-
-## Most Valuable Player Race + Curious Case of Deshawn Watson
-
-According to NFL's top [QB candidates](https://www.nfl.com/news/top-10-nfl-mvp-candidates-in-2020-aaron-rodgers-edges-patrick-mahomes) for MVP, Rodger(GNB), Mahomes(KAN), and Allen(BUF) were the 3 closest in running for the 2020-2021 season.
-
-![mvp_race](https://github.com/aclao89/NFL_Stats/blob/main/Images/mvp_race.jpg)
-
-1. Aaron Rodgers was ultimately named the NFL MVP in 2020. He posted the best passer rating in the NFL at 121.5, a touchdown to interception ratio of 48:5, and highest completion rate at 70.7%. The Packers finished with a 13-3 record and top of their division. Many critics believe his stellar performance as a response to Green Bay Packer's decision to draft a quarterback in the NFL 2020 draft after Rodger's mediocre performance in 2019.
-
-![pass_rate_df](https://github.com/aclao89/NFL_Stats/blob/main/Images/pass_rate_df.PNG)
-
-2. Patrick Mahomes, the reigning Super Bowl MVP, was in close contention with Rodgers. The Chiefs finished the season with the best record at 14-2.  However, if we look closely at the statistics, Rodgers clearly edged out Mahomes in rating, touchdowns, and completion rate.
-
-3. Josh Allen ranked 4th overall in both passer rating and completion rate, 5th in touchdowns and passing yards. The Bills finished with 13-3 and top of their division. There is still room for improvement as he threw 10 interceptions in his early career as a sophomore.
-
-4. I was curious as to why Deshaun Watson was not included in the MVP conversations. Watson, as an individual case, clearly has the stats to warrant consideration. Below are his stats for the 2020 - 2021 season.
-
-1st - Passing yards
-<br>
-1st - Y/A
-<br>
-2nd - Overall Rating
-<br>
-3rd - Completion rate (Cmp %)
-<br>
-7th - Touchdowns
-<br>
-27th - Interceptions
-
-Based on those numbers, Watson should be in the conversation, but football is the ultimate team game. While Watson is certainly one of the most valuable players to any franchise in the NFL, his team's abysmal performance of 4-12 ultimately discounted any support for MVP candidacy.
-
-## Quarterbacks of the 2020 NFL Draft
-
-There were four quarterbacks [drafted](https://www.pro-football-reference.com/years/2020/draft.htm) in the 1st round.
-
--Joe Burrow by Bengals (1st Pick)
-<br>
--Tua Tagovailoa by Dolphins (5th pick)
-<br>
--Justin Herbert by Chargers (6th pick)
-<br>
--Jordan Love by Packers (26th pick)
-
-![qb_rookies](https://github.com/aclao89/NFL_Stats/blob/main/Images/rookie_qbs.jpg)
-
-1. Justin Herbert stands out the most. He has well-rounded stats and possesses solid decision making which didn't result in many interceptions like Joe Burrow and Tua Tagovailoa. Ultimately, Justin Herbert was named NFL Rookie of the Year.
-
-2. However, Justin Herbert played the most games at 15 whereas Joe and Tua were both marred by season ending injuries. Herbert played 5 to 6 more games than Joe and Tua, respectively.
-
-3. Jordan Love had no playing time at all! Rodgers was clearly on a mission to remain the starting quarterback for the Packers which resulted in the MVP award for the 2020 - 2021 season.
-
-![no_love](https://github.com/aclao89/NFL_Stats/blob/main/Images/no_love.PNG)
-
-## NFC East: Dallas Cowboys, New York Giants, Washington Football Team, and Philadelphia Eagles
-
-![nfc_east](https://github.com/aclao89/NFL_Stats/blob/main/Images/nfc_east.jpg)
-
-## NFC North: Green Bay Packers, Chicago Bears, Minnesota Vikings, Detroit selections
-
-![nfc_north](https://github.com/aclao89/NFL_Stats/blob/main/Images/nfc_north.jpg)
-
-## NFC South: Atlanta Falcons, Carolina Panthers, New Orleans Saints, Tampa Bay Buccaneers
-
-![nfc_south](https://github.com/aclao89/NFL_Stats/blob/main/Images/nfc_south.jpg)
-
-## AFC West: Las Vegas Raiders, Los Angeles Chargers, Denver Broncos, Kansas City Chiefs
-
-![afc_west](https://github.com/aclao89/NFL_Stats/blob/main/Images/afc_west.jpg)
-
-## AFC East: New England Patriots, Miami Dolphins, New York Jets, Buffalo Bills
-
-![afc_east](https://github.com/aclao89/NFL_Stats/blob/main/Images/afc_east.jpg)
-
-## AFC North: Pittsburgh Steelers, Cincinnati Bengals, Cleveland Browns, Baltimore Ravens
-
-![afc_north](https://github.com/aclao89/NFL_Stats/blob/main/Images/afc_north.jpg)
-
-## AFC South: Indianapolis Colts, Houston Texans, Tennessee Titans, Jacksonville Jaguars
-
-![afc_south](https://github.com/aclao89/NFL_Stats/blob/main/Images/afc_south.jpg)
+See [nflverse's licensing information](https://github.com/nflverse#licensing), the [player-stat documentation](https://nflreadr.nflverse.com/reference/load_player_stats.html), and the [source update schedule](https://nflreadr.nflverse.com/articles/nflverse_data_schedule.html). No FTN charting data is used.
